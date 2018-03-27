@@ -48,6 +48,18 @@ MIN_CYCLE_TIME = 0.5    # This is the shortest pulse cycle time.
 def scale(x, x0, x1, y0, y1):
     return y0+(x-x0)*((y1-y0)/(x1-x0))
 
+# Cycle a value between a minimum and maximum, returning the current value
+# and the delta, which will change positive/negative at the ends of the cycle.
+def cycle_value(current, minimum, maximum, delta):
+    current = current + delta
+    if current > maximum:
+        current = maximum - delta
+        delta = -delta
+    if current < minimum:
+        current = minimum - delta
+        delta = - delta
+    return (current, delta)
+
 # A variation on the standard color wheel function that also sets the
 # brightness of the color by scaling the color values to be within the
 # range of 0 to max_brightness.  If the optional brightness and max_brightness
@@ -75,7 +87,7 @@ def wheel(pos, brightness=255, max_brightness=255):
 
 ###########################################################################
 # INITIAL SETTINGS
-color = 1                               # Start with red
+color = 0                               # Start with red
 cycle = 2.0                             # 2 second pulse cycle
 cycle_change = -0.1                     # Touch will shorten the cycle time
                                         # by 0.1 second
@@ -119,29 +131,13 @@ while True:
                 # cycle color
                 color = color + 1
                 if color > 255:
-                    color = 1
-                pixels.fill(wheel(color, cycle_brightness, cycle_max_brightness))
-                pixels.show()
+                    color = 0
             elif pad == 'speed':
                 # change pulse cycle time by 0.1 second
-                cycle = cycle + cycle_change
-                if cycle > MAX_CYCLE_TIME:
-                    cycle = MAX_CYCLE_TIME - 0.1
-                    cycle_change = -0.1
-                elif cycle < MIN_CYCLE_TIME:
-                    cycle = MIN_CYCLE_TIME + 0.1
-                    cycle_change = 0.1
+                (cycle, cycle_change) = cycle_value(cycle, MIN_CYCLE_TIME, MAX_CYCLE_TIME, cycle_change)
             elif pad == 'brightness':
                 # change max brightness
-                cycle_max_brightness = cycle_max_brightness + max_brightness_change
-                if cycle_max_brightness > MAX_BRIGHTNESS:
-                    cycle_max_brightness = MAX_BRIGHTNESS - 1
-                    max_brightness_change = -1
-                elif cycle_max_brightness < 10:
-                    cycle_max_brightness = 11
-                    max_brightness_change = 1
-                pixels.fill(wheel(color, cycle_brightness, cycle_max_brightness))
-                pixels.show()
+                (cycle_max_brightness, max_brightness_change) = cycle_value(cycle_max_brightness, MAX_BRIGHTNESS, 10, max_brightness_change)
 
     # This section always runs - we might have changed the color or
     # brightness of the LEDs with a touch input, and it might continue to
