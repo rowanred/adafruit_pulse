@@ -16,7 +16,7 @@ import touchio
 
 ###########################################################################
 # CONSTANTS
-DOTSTAR_BRIGHTNESS = 0.7    # When initializing the NeoPixel ring, use this as
+NEOPIXEL_BRIGHTNESS = 0.7   # When initializing the NeoPixel ring, use this as
                             # brightness (setting the PWM) - even if the pulse
                             # cycle maximum brightness is changed, it will
                             # always be within this hardware range.  Values
@@ -115,9 +115,9 @@ sensor['color'] = touchio.TouchIn(board.A1)
 sensor['speed'] = touchio.TouchIn(board.A2)
 sensor['brightness'] = touchio.TouchIn(board.A3)
 
-# Initialize the NeoPixels and turn them off to start
-pixels = neopixel.NeoPixel(board.NEOPIXEL, 10, brightness=DOTSTAR_BRIGHTNESS)
-pixels.fill(wheel(1, cycle_brightness, cycle_max_brightness))
+# Initialize the NeoPixels and set them to red
+pixels = neopixel.NeoPixel(board.NEOPIXEL, 10, brightness=NEOPIXEL_BRIGHTNESS)
+pixels.fill(wheel(color, cycle_brightness, cycle_max_brightness))
 pixels.show()
 
 # MAIN LOOP
