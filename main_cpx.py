@@ -25,7 +25,7 @@ NEOPIXEL_BRIGHTNESS = 0.7   # When initializing the NeoPixel ring, use this as
                             # the practical difference between 0.7 and 1.0
                             # is minimal.
 
-MAX_BRIGHTNESS = 255    # This is the maximum brightness of a pulse cycle.
+MAX_BRIGHTNESS = 100    # This is the maximum brightness of a pulse cycle.
                         # When the brightness sensor is touched it will
                         # change the current maximum brightness up to this
                         # value, and then cycle back down to 0 (off).
@@ -57,7 +57,7 @@ def cycle_value(current, minimum, maximum, delta):
         delta = -delta
     if current < minimum:
         current = minimum - delta
-        delta = - delta
+        delta = -delta
     return (current, delta)
 
 # A variation on the standard color wheel function that also sets the
@@ -116,7 +116,7 @@ sensor['speed'] = touchio.TouchIn(board.A2)
 sensor['brightness'] = touchio.TouchIn(board.A3)
 
 # Initialize the NeoPixels and set them to red
-pixels = neopixel.NeoPixel(board.NEOPIXEL, 10, brightness=NEOPIXEL_BRIGHTNESS)
+pixels = neopixel.NeoPixel(board.NEOPIXEL, 10, brightness=NEOPIXEL_BRIGHTNESS, auto_write=False)
 pixels.fill(wheel(color, cycle_brightness, cycle_max_brightness))
 pixels.show()
 
@@ -137,7 +137,7 @@ while True:
                 (cycle, cycle_change) = cycle_value(cycle, MIN_CYCLE_TIME, MAX_CYCLE_TIME, cycle_change)
             elif pad == 'brightness':
                 # change max brightness
-                (cycle_max_brightness, max_brightness_change) = cycle_value(cycle_max_brightness, MAX_BRIGHTNESS, 10, max_brightness_change)
+                (cycle_max_brightness, max_brightness_change) = cycle_value(cycle_max_brightness, 1, MAX_BRIGHTNESS, max_brightness_change)
 
     # This section always runs - we might have changed the color or
     # brightness of the LEDs with a touch input, and it might continue to
