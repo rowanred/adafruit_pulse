@@ -109,11 +109,11 @@ while time.monotonic() - start <= 5.0:
     red_led.value = False
     time.sleep(0.5)
 
-# Set up the capacitive touch sensors on A0, D3, D4
+# Set up the capacitive touch sensors on A0, A3, A4
 sensor = dict()
 sensor['color'] = touchio.TouchIn(board.A0)
-sensor['speed'] = touchio.TouchIn(board.D3)
-sensor['brightness'] = touchio.TouchIn(board.D4)
+sensor['speed'] = touchio.TouchIn(board.A3)
+sensor['brightness'] = touchio.TouchIn(board.A4)
 
 print("sensors")
 
